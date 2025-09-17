@@ -132,16 +132,3 @@ During data cleaning, several data quality issues were noted and handled as foll
 | order\_items | price, freight\_value            | Outlier values | 3        | Y         | 0.00002%  | Prices very low (0.85) with high freight values (18–22). Kept them as they don’t meaningfully affect mean and may represent rare valid cases. |
 
 
-
-## 📌 Repository Structure
-
-```
-/data               → raw CSV files
-/sql_cleaning       → data cleaning & transformation SQL scripts
-/sql_analysis       → business question SQL scripts
-/notebooks          → EDA & visualizations
-/dashboard          → Tableau / PowerBI dashboards
-/README.md          → this file
-```
-
----
