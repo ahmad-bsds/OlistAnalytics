@@ -34,7 +34,12 @@ Insights and recommendations are provided on the following key areas:
 
 * 📝 SQL scripts for business-targeted questions are available in the `/sql_analysis` folder.
 
-* 📊 An interactive dashboard has been created for the internal teams to explore KPIs and trends (\[see dashboard link]\({notion link here})).
+* 📊 An interactive dashboard has been created for the internal teams to explore KPIs and trends.
+
+  <img width="1043" height="720" alt="Screenshot 2025-09-17 131011" src="https://github.com/user-attachments/assets/9a2ee109-1e2c-4649-b385-593d5839861a" />
+  <img width="960" height="721" alt="Screenshot 2025-09-17 131031" src="https://github.com/user-attachments/assets/dd95f756-0953-4504-babc-82e07b7d8a7e" />
+
+
 
 ---
 
