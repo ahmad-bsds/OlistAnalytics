@@ -1,141 +1,151 @@
-# Tables name
-- orders
-- customers
-- cat_name_trans
-- order_items
-- products
-- sellers
-- geolocation
-- order_payments
-- order_reviews
+# 🛍️ Olist Store – Data Analytics Case Study
+This project analyzes data from the Olist Store, a Brazilian e-commerce marketplace that connects thousands of sellers with customers across the country. The analysis was driven by stakeholder-focused business questions aimed at uncovering key growth drivers, improving delivery performance, optimizing payment behavior, and understanding customer and seller dynamics. Using SQL and Python, we cleaned and explored the dataset, identified trends, and generated actionable insights. The entire workflow, including SQL scripts, EDA, and visual dashboards, has been documented and shared to support data-driven decision-making across teams.
 
-# Exective questions
-- How can we identify our most valuable customers and what factors drive their repeat purchases?
-- Which regions or sellers have the highest delivery delays, and how do these delays impact customer review scores?
-- Which product categories contribute the most to revenue and which are underperforming when accounting for returns and reviews?
-- Which sellers are driving the most revenue per month, and what differentiates our top sellers from lower performers?
-- Which customer regions have the highest growth potential, based on purchase frequency and average order value?
+📌 **Note:** I’ve documented all analysis steps, SQL queries, and exploratory notes in Notion for better readability and traceability.
+🔗 \[Access the complete Notion workspace here]\({[notion link here](https://www.notion.so/Olist-Store-250959537bd080a19c94e5e0db724c68?source=copy_link)})
+
+---
+
+## 🏢 Project Background
+
+Olist is a leading Brazilian e-commerce marketplace enabling small and medium-sized businesses to sell their products through major marketplaces.
+
+* **Industry:** E-commerce / Online Marketplace
+* **Active Years in Data:** 2016–2018
+* **Scale:**
+
+  * 99,441 unique customers
+  * 3,095 sellers
+  * 112,650 products sold
+* **Business Model:** Marketplace platform connecting sellers to customers, handling sales, payments, and logistics coordination
+* **Goal of Analysis:** Identify key drivers of growth, customer experience, and operational efficiency
+
+Insights and recommendations are provided on the following key areas:
+
+* **Category 1:** Product & Category Performance
+
+* **Category 2:** Customer Behavior & Retention
+
+* **Category 3:** Seller Performance & Reviews
+
+* **Category 4:** Payment Behavior & Operational Logistics
+
+* 📝 SQL scripts used for data cleaning and transformations are available in the `/sql_cleaning` folder.
+
+* 📝 SQL scripts for business-targeted questions are available in the `/sql_analysis` folder.
+
+* 📊 An interactive dashboard has been created for the internal teams to explore KPIs and trends (\[see dashboard link]\({notion link here})).
+
+---
+
+## 🗃️ Data Structure & Initial Checks
+
+The main database schema is built around the `orders` table and links customers, sellers, products, payments, and reviews:
+
+**Tables Overview**
+
+* `customers` – customer demographics and locations
+* `orders` – core order transactions
+* `order_items` – line-level order data with product, seller, and pricing info
+* `products` – product metadata
+* `sellers` – seller information
+* `geolocation` – city and state mappings
+* `order_payments` – payments by method and installment
+* `order_reviews` – customer feedback and satisfaction
 
 
-# Northstar
- 1. How can we identify our most valuable customers and what factors drive their repeat purchases?
+---
 
-  Northstar Metric: Customer Lifetime Value (CLV)
+## 📌 Executive Summary
 
-  Supporting Metrics:
-   - Repeat Purchase Rate = (Customers with 2+ purchases / Total customers) × 100
-   - Average Order Value (AOV) = Total revenue / Number of orders
-   - Purchase Frequency = Total orders / Unique customers
-   - Customer Retention Rate = ((Customers at end of period - New customers during period) / Customers at start of period) × 100
+### Overview of Findings
 
-  Data Requirements:
-   - Customer identifiers (customer_id)
-   - Order timestamps (order_purchase_timestamp)
-   - Order values (price from order_items)
-   - Customer segmentation data
+Our analysis reveals strong growth dynamics but also structural challenges impacting customer experience:
 
-  2. Which regions or sellers have the highest delivery delays, and how do these delays impact customer review scores?
+* **São Paulo** is the largest customer hub with >15% of orders, but **average delivery time exceeds 8 days**, hurting satisfaction.
+* The **top four product categories drive 36% of revenue**, showing revenue concentration risk.
+* **Peak demand** occurs from **5 AM to midnight**, especially at **11 AM, 2 PM, 4 PM, and 9 PM** on early weekdays, requiring inventory/logistics optimization.
+* **75% of customers pay by credit card**, and **installment payments drive higher order values**.
 
-  Northstar Metric: Delivery Performance Index = (On-time deliveries / Total deliveries) × Average review score
 
-  Supporting Metrics:
-   - Delivery Delay Rate = (Late deliveries / Total deliveries) × 100
-   - Average Delivery Delay = Average (Actual delivery date - Estimated delivery date)
-   - Review Score Correlation = Correlation between delivery delays and review scores
-   - Regional Performance Score = Average review score by region
+---
 
-  Data Requirements:
-   - Delivery dates (order_delivered_customer_date, order_estimated_delivery_date)
-   - Seller information (seller_id)
-   - Geographic data (customer_state, seller_state)
-   - Review scores (review_score)
+## 📊 Insights Deep Dive
 
-  3. Which product categories contribute the most to revenue and which are underperforming when accounting for returns and reviews?
+### Category 1: Product & Category Performance
 
-  Northstar Metric: Category Profitability Index = (Category Revenue × Average Review Score) / Category Order Volume
+* **Top Category:** Bed, Bath & Table leads sales; top four categories contribute 36% of total GMV.
+* **Sales Growth:** Orders have grown consistently year over year, peaking in 2018.
+* **Seasonality:** Q2 is strongest, Q4 is weakest — indicating seasonal promotions may be underutilized.
 
-  Supporting Metrics:
-   - Revenue by Category = SUM(price) by product_category_name
-   - Return Rate by Category = (Returned items / Total items) × 100
-   - Category Review Score = Average(review_score) by product_category_name
-   - Category Growth Rate = ((Current period revenue - Previous period revenue) / Previous period revenue) × 100
 
-  Data Requirements:
-   - Product information (product_category_name)
-   - Order values (price from order_items)
-   - Review scores (review_score)
-   - Order timestamps for trend analysis
+---
 
-  4. Which sellers are driving the most revenue per month, and what differentiates our top sellers from lower performers?
+### Category 2: Customer Behavior & Retention
 
-  Northstar Metric: Seller Revenue Efficiency = Monthly Revenue per Seller / Average Delivery Time
+* 99,441 customers placed 99,441 orders (1:1 ratio shows almost no repeat buyers → retention opportunity).
+* Customers cluster heavily in São Paulo, followed by Rio de Janeiro, Brasília, and Belo Horizonte.
+* Peak shopping hours are 11 AM, 2 PM, 4 PM, and 9 PM, suggesting when to run campaigns.
 
-  Supporting Metrics:
-   - Monthly Seller Revenue = SUM(price) by seller_id per month
-   - Seller Review Score = Average(review_score) by seller_id
-   - Seller Delivery Performance = (On-time deliveries / Total deliveries) × 100 by seller_id
-   - Seller Order Volume = Number of orders by seller_id
 
-  Data Requirements:
-   - Seller identifiers (seller_id)
-   - Order values (price from order_items)
-   - Delivery dates (order_delivered_customer_date, order_estimated_delivery_date)
-   - Review scores (review_score)
-   - Order timestamps
+---
 
-  5. Which customer regions have the highest growth potential, based on purchase frequency and average order value?
+### Category 3: Seller Performance & Reviews
 
-  Northstar Metric: Regional Growth Potential Index = (Purchase Frequency × Average Order Value) × (1 - Market Saturation)
+* 3,095 sellers completed 98,666 orders.
+* The **top 10 sellers account for over 10% of all orders** each.
+* Some high-volume sellers have **below-average review scores**, showing scale ≠ quality.
 
-  Supporting Metrics:
-   - Regional Purchase Frequency = Total orders by region / Unique customers by region
-   - Regional Average Order Value = Total revenue by region / Number of orders by region
-   - Market Penetration Rate = (Customers in region / Total population in region) × 100
-   - Regional Revenue Growth = ((Current period revenue - Previous period revenue) / Previous period revenue) × 100 by region
+---
 
-  Data Requirements:
-   - Customer geographic data (customer_state from geolocation)
-   - Order values (price from order_items)
-   - Order timestamps
-   - Customer identifiers (customer_id)
+### Category 4: Payment Behavior & Logistics
 
-# Detailed Recommendations for Tracking and Measuring Success
+* **Credit card is used in 75% of orders**, followed by debit card.
+* **Installments boost order values** (avg R\$130 with 3 installments vs R\$118 for 1 installment).
+* Delivery delays are concentrated in São Paulo (>8 days avg) and require logistics improvement.
 
-  Based on the Northstar matrices defined above, here are my recommendations for implementation:
 
-  1. Data Integration & Dashboard Development
-   - Create a unified data model that joins all tables (orders, order_items, products, sellers, geolocation, payments, reviews)
-   - Develop executive dashboards with drill-down capabilities for each Northstar metric
-   - Implement automated data pipelines to refresh metrics daily/weekly
+---
 
-  2. Customer Value Tracking System
-   - Implement a CLV calculation model that updates monthly based on customer behavior
-   - Segment customers into value tiers (High/Medium/Low) based on CLV percentiles
-   - Set up alerts for significant changes in repeat purchase rates
+## 💡 Recommendations
 
-  3. Delivery Performance Monitoring
-   - Create real-time delivery tracking that compares estimated vs. actual delivery dates
-   - Develop heat maps showing regional delivery performance
-   - Establish correlation analysis between delivery delays and customer satisfaction scores
+Based on the insights above, I recommend the following actions for the **Operations, Marketing, and Strategy teams**:
 
-  4. Product Category Performance Framework
-   - Build category performance scorecards with revenue, review scores, and return rates
-   - Implement trend analysis to identify emerging and declining categories
-   - Create early warning systems for underperforming categories
+* **Improve São Paulo Delivery:** Local warehousing and faster courier SLAs to reduce >8-day delivery lag.
+* **Diversify Sales:** Expand into Tier-2 cities (Rio, Brasília, Belo Horizonte) and incentivize mid-tier sellers to reduce concentration risk.
+* **Strengthen Seller Quality:** Enforce onboarding filters, review audits, and offer structured support to low-rated high-volume sellers.
+* **Promote Installment Payments:** Especially for high-value categories, to increase AOV and customer stickiness.
+* **Smooth Seasonality:** Launch promotional campaigns in weaker Q4 to balance seasonal dips.
+* **Implement Delay Compensation:** A customer guarantee to improve trust and retention.
 
-  5. Seller Performance Benchmarking
-   - Develop seller leaderboards with multiple performance dimensions
-   - Create seller segmentation models (Top/Mid/Bottom tier)
-   - Establish benchmarks for delivery performance and customer satisfaction by seller
+---
 
-  6. Regional Growth Analysis
-   - Implement geographic analysis tools to identify high potential regions
-   - Create predictive models for regional growth based on current trends
-   - Develop market penetration tracking by region
+## ⚠️ Assumptions & Caveats
 
-  7. Success Measurement & KPIs
-   - Set quarterly targets for each Northstar metric
-   - Establish feedback loops to validate metric improvements with business outcomes
-   - Create A/B testing frameworks to measure impact of initiatives on Northstar metrics
+During data cleaning, several data quality issues were noted and handled as follows:
 
-  These Northstar matrices and recommendations will provide a comprehensive framework for data-driven decision making and strategic planning for the Olist e-commerce platform.
+| Table        | Column                           | Issue          | Rowcount | Solvable? | Magnitude | Resolution                                                                                                                                    |
+| ------------ | -------------------------------- | -------------- | -------- | --------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| orders       | order\_approved\_at              | Null values    | 160      | N         | \~0.1%    | Column not needed for analysis, following stakeholder questions.                                                                              |
+| orders       | order\_delivered\_carrier\_date  | Null values    | 1783     | N         | \~1.8%    | Column not needed for analysis, following stakeholder questions.                                                                              |
+| orders       | order\_delivered\_customer\_date | Null values    | 2965     | N         | \~3%      | Imputing this column may cause incorrect results; left as-is due to low magnitude.                                                            |
+| products     | product\_category\_name          | Null values    | 610      | N         | 0.018%    | Left as-is due to low magnitude and no reliable way to impute.                                                                                |
+| products     | product\_name\_lenght            | Null values    | 610      | N         | 0.018%    | Left as-is.                                                                                                                                   |
+| products     | product\_description\_lenght     | Null values    | 610      | N         | 0.018%    | Left as-is.                                                                                                                                   |
+| products     | product\_photos\_qty             | Null values    | 610      | N         | 0.018%    | Left as-is.                                                                                                                                   |
+| order\_items | price, freight\_value            | Outlier values | 3        | Y         | 0.00002%  | Prices very low (0.85) with high freight values (18–22). Kept them as they don’t meaningfully affect mean and may represent rare valid cases. |
+
+
+
+## 📌 Repository Structure
+
+```
+/data               → raw CSV files
+/sql_cleaning       → data cleaning & transformation SQL scripts
+/sql_analysis       → business question SQL scripts
+/notebooks          → EDA & visualizations
+/dashboard          → Tableau / PowerBI dashboards
+/README.md          → this file
+```
+
+---
