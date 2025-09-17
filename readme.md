@@ -109,14 +109,10 @@ Our analysis reveals strong growth dynamics but also structural challenges impac
 
 ## 💡 Recommendations
 
-Based on the insights above, I recommend the following actions for the **Operations, Marketing, and Strategy teams**:
-
-* **Improve São Paulo Delivery:** Local warehousing and faster courier SLAs to reduce >8-day delivery lag.
-* **Diversify Sales:** Expand into Tier-2 cities (Rio, Brasília, Belo Horizonte) and incentivize mid-tier sellers to reduce concentration risk.
-* **Strengthen Seller Quality:** Enforce onboarding filters, review audits, and offer structured support to low-rated high-volume sellers.
-* **Promote Installment Payments:** Especially for high-value categories, to increase AOV and customer stickiness.
-* **Smooth Seasonality:** Launch promotional campaigns in weaker Q4 to balance seasonal dips.
-* **Implement Delay Compensation:** A customer guarantee to improve trust and retention.
+1. Optimize logistics in São Paulo with local hubs, faster couriers, and strict SLAs.  
+2. Diversify markets and products by expanding to Tier-2 cities and emerging categories.  
+3. Strengthen seller ecosystem with stricter onboarding, audits, and support programs.  
+4. Promote credit card installments to lift AOV and resolve payment anomalies.  
 
 ---
 
